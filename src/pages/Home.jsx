@@ -3,12 +3,12 @@ import FadeIn from "../animations/FadeIn";
 import firebase from "firebase/app";
 import { useHistory } from "react-router-dom";
 import Particles from "../animations/Particles";
-import YoutubeCards from "../components/YoutubeCards";
-import NoLiveStream from "../assets/images/NoStream.png";
 import Toggle from "../components/DarkTheme";
+import { ReactFlvPlayer } from "react-flv-player";
 
 export default function Home() {
   const history = useHistory();
+  let { REACT_APP_STREAM_KEY } = process.env;
 
   function logout() {
     firebase
@@ -47,7 +47,7 @@ export default function Home() {
             }}
           >
             <div className="card-body d-md-flex align-items-center d-block">
-              <div id="no-stream">
+              {/* <div id="no-stream">
                 <img
                   className="img-fluid px-md-3"
                   src={NoLiveStream}
@@ -57,19 +57,14 @@ export default function Home() {
                 <h5 className="text-center stream-text text-secondary">
                   Live Stream is Down. Check out our recorded events!
                 </h5>
-              </div>
-
-              <iframe
-                id="youtubeLive"
-                title="Youtube Live Stream"
+              </div> */}
+              <ReactFlvPlayer
                 className="col-12 col-md-8 px-md-3 pb-3 pb-md-0 iframe-height"
-                style={{ display: "none" }}
-                src={NoLiveStream}
-                frameBorder="0"
-                allowFullScreen
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              ></iframe>
-
+                url={`http://vpn.opencloud.pattarai.in:8000/live/${REACT_APP_STREAM_KEY}.flv`}
+                isLive={true}
+                hasAudio={true}
+                hasVideo={true}
+              />
               <iframe
                 title="Titan Embed"
                 className="col-12 col-md-4 iframe-height"
@@ -79,7 +74,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <YoutubeCards />
       </FadeIn>
       <Particles />
     </>
