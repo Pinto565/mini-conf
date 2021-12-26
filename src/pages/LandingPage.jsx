@@ -2,18 +2,20 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "../firebase";
 import Button from "@material-ui/core/Button";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import FadeIn from "../animations/FadeIn";
 import Particles from "../animations/Particles";
 import { checkTheme } from "./theme";
 import Toggle from "../components/DarkTheme";
+import { AuthContext } from "../Context/AuthContext";
 
 export default function LandingPage() {
   const history = useHistory();
-
+  const { setUser } = useContext(AuthContext);
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
+      setUser(user);
       history.push("/home");
     }
   });

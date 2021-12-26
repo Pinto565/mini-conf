@@ -1,5 +1,5 @@
 import Button from "@material-ui/core/Button";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import FadeIn from "../animations/FadeIn";
 import firebase from "firebase/app";
 import { useHistory } from "react-router-dom";
@@ -8,8 +8,10 @@ import Toggle from "../components/DarkTheme";
 import NoLiveStream from "../assets/images/NoStream.png";
 import { ReactFlvPlayer } from "react-flv-player";
 import axios from "axios";
+import { AuthContext } from "../Context/AuthContext";
 
 export default function Home() {
+  const { user } = useContext(AuthContext);
   const history = useHistory();
   const [display, setDisplay] = useState({ image: "", video: "none" });
   let { REACT_APP_STREAM_KEY } = process.env;
@@ -48,6 +50,7 @@ export default function Home() {
   };
   useEffect(() => {
     streams();
+    console.log(user);
   }, []);
 
   return (
@@ -98,6 +101,9 @@ export default function Home() {
                   hasVideo={true}
                 />
               </div>
+              {/* <div className="col-12 col-md-4 iframe-height">
+                <Chat />
+              </div> */}
               <iframe
                 title="Titan Embed"
                 className="col-12 col-md-4 iframe-height"
