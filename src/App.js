@@ -12,9 +12,9 @@ import { useState } from "react";
 import { AuthContext } from "./Context/AuthContext";
 
 export default function App() {
-  const [user, setUser] = useState(null);
+  const [loggedUser, setLoggedUser] = useState(null);
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ loggedUser, setLoggedUser }}>
       <Router>
         <Switch>
           <Route exact path="/" component={LandingPage} />
