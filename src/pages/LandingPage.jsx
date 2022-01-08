@@ -1,6 +1,9 @@
-import firebase from "firebase/app";
-import "firebase/auth";
-import "../firebase";
+import { auth } from "../firebase";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+} from "firebase/auth";
 import Button from "@material-ui/core/Button";
 import { useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
@@ -12,23 +15,19 @@ import { AuthContext } from "../Context/AuthContext";
 
 export default function LandingPage() {
   const history = useHistory();
-  const { setUser } = useContext(AuthContext);
-  firebase.auth().onAuthStateChanged((user) => {
+  const { loggedUser, setLoggedUser } = useContext(AuthContext);
+
+  onAuthStateChanged(auth, (user) => {
     if (user) {
-      setUser(user);
+      setLoggedUser(user);
       history.push("/home");
     }
   });
 
-  function signInWithGoogle() {
-    var provider = new firebase.auth.GoogleAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(provider)
-      .then((result) => {
-        /** @type {firebase.auth.OAuthCredential} */
-      });
-  }
+  const signInWithGoogle = async () => {
+    const provider = await new GoogleAuthProvider();
+    await signInWithPopup(auth, provider).catch((err) => console.log(err));
+  };
 
   useEffect(() => {
     checkTheme();

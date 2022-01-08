@@ -1,7 +1,8 @@
 import Button from "@material-ui/core/Button";
 import { useEffect, useState, useContext } from "react";
 import FadeIn from "../animations/FadeIn";
-import firebase from "firebase/app";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 import { useHistory } from "react-router-dom";
 import Particles from "../animations/Particles";
 import Toggle from "../components/DarkTheme";
@@ -11,19 +12,19 @@ import axios from "axios";
 import { AuthContext } from "../Context/AuthContext";
 
 export default function Home() {
-  const { user } = useContext(AuthContext);
+  const { loggedUser, setLoggedUser } = useContext(AuthContext);
   const history = useHistory();
   const [display, setDisplay] = useState({ image: "", video: "none" });
   let { REACT_APP_STREAM_KEY } = process.env;
 
-  function logout() {
-    firebase
-      .auth()
-      .signOut()
+  const logout = () => {
+    signOut(auth)
       .then(() => {
+        setLoggedUser(null);
         history.push("/");
-      });
-  }
+      })
+      .catch((err) => console.log(err));
+  };
 
   let streams = async () => {
     let stream = await axios
@@ -46,11 +47,9 @@ export default function Home() {
     } catch (err) {
       setDisplay({ image: "", video: "none" });
     }
-    // await console.log(stream_publishers);
   };
   useEffect(() => {
     streams();
-    console.log(user);
   }, []);
 
   return (
@@ -88,7 +87,7 @@ export default function Home() {
                   height={400}
                   alt=""
                 />
-                <h5 className="text-center stream-text text-secondary">
+                <h5 className="text-center stream-text text-secondary mt-4">
                   Live Stream is Down. See You Later..
                 </h5>
               </div>
