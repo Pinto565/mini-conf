@@ -1,21 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Redirect } from "react-router-dom";
-import firebase from "firebase/app";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import { AuthContext } from "./Context/AuthContext";
 
 export default function HomeRoute(props) {
   const Component = props.component;
   const [loading, setLoading] = useState(true);
   const [isuser, setUser] = useState(null);
+  const { loggedUser, setLoggedUser } = useContext(AuthContext);
+
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        setUser(user);
-      }
-      setLoading(false);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (loggedUser) {
+      setUser(loggedUser);
+    }
+    setLoading(false);
   }, []);
 
   return (
